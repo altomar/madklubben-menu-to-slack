@@ -4,11 +4,12 @@ import path from 'path';
 import { WebClient } from '@slack/web-api';
 import { SlackMessage, PdfLink } from './types';
 import dotenv from 'dotenv';
+import pdfParse from 'pdf-parse';
 
 dotenv.config();
 
 const SLACK_TOKEN = process.env.SLACK_TOKEN;
-const CHANNEL_ID = process.env.SLACK_CHANNEL_ID;
+const CHANNEL_ID = process.env.SLACK_CHANNEL_ID as string;
 const BASE_URL = 'https://media.uheadless.com/aciiffac23';
 const TARGET_URL = 'https://www.madklubben.dk/en/lunch/madklubben';
 
@@ -47,18 +48,23 @@ async function downloadPdf(pdfLink: PdfLink): Promise<string> {
     return filePath;
 }
 
-async function sendToSlack(filePath: string): Promise<void> {
-    console.log('Uploading file to Slack...');
-    const result = await web.files.uploadV2({
-        channel_id: CHANNEL_ID,
-        file: fs.createReadStream(filePath),
-        filename: 'menu.pdf',
-        title: 'Daily Menu',
+async function extractTextFromPdf(filePath: string): Promise<string> {
+    const dataBuffer = fs.readFileSync(filePath);
+    const data = await pdfParse(dataBuffer);
+    console.log('PDF text:', data.text);
+    return data.text;
+}
+
+async function sendToSlack(text: string): Promise<void> {
+    console.log('Sending text to Slack...');
+    const result = await web.chat.postMessage({
+        channel: CHANNEL_ID,
+        text: text,
     });
     if (result.ok) {
-        console.log(`File uploaded to Slack: ${(result.file as any)?.permalink}`);
+        console.log('Text sent to Slack successfully.');
     } else {
-        console.error('Failed to upload file to Slack:', result.error);
+        console.error('Failed to send text to Slack:', result.error);
     }
 }
 
@@ -67,7 +73,8 @@ async function main() {
         const pdfLink = await fetchPdfLink();
         if (pdfLink) {
             const filePath = await downloadPdf(pdfLink);
-            await sendToSlack(filePath);
+            const text = await extractTextFromPdf(filePath);
+            await sendToSlack(text);
         } else {
             console.log('No PDF link found for today.');
         }
