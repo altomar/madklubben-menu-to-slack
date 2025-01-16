@@ -8,7 +8,8 @@ This project automates the process of downloading a daily PDF from a specified w
 my-automation-project
 ├── src
 │   ├── app.ts          # Main entry point for the automation logic
-│   └── types.ts        # Type definitions and interfaces
+│   └── types/
+│       └── index.ts    # Type definitions and interfaces
 ├── package.json        # npm configuration file
 ├── tsconfig.json       # TypeScript configuration file
 └── README.md           # Project documentation
@@ -18,8 +19,7 @@ my-automation-project
 
 1. **Clone the repository:**
    ```
-   git clone <repository-url>
-   cd my-automation-project
+   git clone https://github.com/altomar/madklubben-menu-to-slack.git
    ```
 
 2. **Install dependencies:**
@@ -28,9 +28,8 @@ my-automation-project
    ```
 
 3. **Environment Variables:**
-   - Create a `.env` file in the root directory and add the following variables:
+   - Copy and rename `.env.example` to `.env` file in the root directory and add your variables:
      ```
-     SLACK_WEBHOOK_URL=<your-slack-webhook-url>
      SLACK_TOKEN=<your-slack-token>
      SLACK_CHANNEL_ID=<your-slack-channel-id>
      ```
@@ -53,6 +52,7 @@ This will execute the script in `src/app.ts`, which will:
 - Node-fetch: For fetching resources.
 - dotenv: For managing environment variables.
 - Slack API client: For sending messages to Slack.
+- pdf-parse: For extracting text from PDF files.
 
 
 ## License
