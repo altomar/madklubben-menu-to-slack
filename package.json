@@ -1,0 +1,23 @@
+{
+  "name": "my-automation-project",
+  "version": "1.0.0",
+  "description": "An automation project to download daily PDFs and send them to a Slack channel.",
+  "main": "src/app.ts",
+  "scripts": {
+    "start": "ts-node src/app.ts"
+  },
+  "dependencies": {
+    "@slack/web-api": "^6.0.0",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.3",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.3",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.3"
+  },
+  "author": "",
+  "license": "ISC"
+}
