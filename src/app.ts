@@ -10,7 +10,7 @@ dotenv.config();
 
 const SLACK_TOKEN = process.env.SLACK_TOKEN;
 const CHANNEL_ID = process.env.SLACK_CHANNEL_ID as string;
-const BASE_URL = 'https://media.uheadless.com/aciiffac23';
+// const BASE_URL = 'https://media.uheadless.com/aciiffac23';
 const TARGET_URL = 'https://www.madklubben.dk/en/lunch/madklubben';
 
 const web = new WebClient(SLACK_TOKEN);
@@ -51,8 +51,46 @@ async function downloadPdf(pdfLink: PdfLink): Promise<string> {
 async function extractTextFromPdf(filePath: string): Promise<string> {
     const dataBuffer = fs.readFileSync(filePath);
     const data = await pdfParse(dataBuffer);
-    console.log('PDF text:', data.text);
     return data.text;
+}
+
+async function formatText(text: string): Promise<string> {
+    const start = text.indexOf('•');
+    const end = text.lastIndexOf('•');
+    if (start === -1 || end === -1 || start === end) {
+        return text;
+    }
+    let selectedText = text.substring(start + 1, end);
+    selectedText = selectedText.replace(/•/g, ' ');
+
+    // if the line contains "allergen", make the line italic
+    selectedText = selectedText.split('\n').map((line) => {
+        if (line.toLowerCase().includes('allergen')) {
+            return `_${line}_`;
+        }
+        return line;
+    }).join('\n');
+
+    //? do it later, not important
+    //  /* now we add emojis to the start of a line if that line contains:
+    // pork, pig = :pig:
+    // chicken = :chicken:
+    // fish = :fish:
+    // beed, burger = :cow: */
+    // selectedText = selectedText.split('\n').map((line) => {
+    //     if (line.toLowerCase().includes('pork') || line.toLowerCase().includes('pig')) {
+    //         return `:pig: ${line}`;
+    //     } else if (line.toLowerCase().includes('chicken')) {
+    //         return `:chicken: ${line}`;
+    //     } else if (line.toLowerCase().includes('fish')) {
+    //         return `:fish: ${line}`;
+    //     } else if (line.toLowerCase().includes('beef') || line.toLowerCase().includes('burger')) {
+    //         return `:cow: ${line}`;
+    //     }
+    //     return line;
+    // }).join('\n');
+    console.log('PDF text:', selectedText.trim());
+    return selectedText.trim();
 }
 
 async function sendToSlack(text: string): Promise<void> {
@@ -73,8 +111,9 @@ async function main() {
         const pdfLink = await fetchPdfLink();
         if (pdfLink) {
             const filePath = await downloadPdf(pdfLink);
-            const text = await extractTextFromPdf(filePath);
-            await sendToSlack(text);
+            const extractedText = await extractTextFromPdf(filePath);
+            const formattedText = await formatText(extractedText);
+            await sendToSlack(formattedText);
         } else {
             console.log('No PDF link found for today.');
         }
