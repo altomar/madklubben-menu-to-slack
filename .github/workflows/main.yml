@@ -2,7 +2,7 @@ name: Daily Menu post
 
 on:
   schedule:
-    - cron: '46 11 * * *' # Runs every day at 11:00 UTC
+    - cron: '50 10 * * *' # Runs every day at 11:00 UTC
 
 jobs:
   run-npm-start:
