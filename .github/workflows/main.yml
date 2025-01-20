@@ -2,7 +2,7 @@ name: Daily Menu post
 
 on:
   schedule:
-    - cron: '50 10 * * *' # Runs every day at 11:00 UTC
+    - cron: '52 9 * * *' # Runs every day at around 10:00 UTC, 11:00 Copenhagen time
 
 jobs:
   run-npm-start:
@@ -19,6 +19,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        
+      - name: Set environment variables
+        run: |
+          echo "CHANNEL_ID=${{ secrets.CHANNEL_ID }}" >> .env
+          echo "SLACK_BOT_TOKEN=${{ secrets.SLACK_TOKEN }}" >> .env
 
       - name: Run npm start
         run: npm start

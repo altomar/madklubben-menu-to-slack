@@ -9,7 +9,7 @@ import pdfParse from 'pdf-parse';
 dotenv.config();
 
 const SLACK_TOKEN = process.env.SLACK_TOKEN;
-const CHANNEL_ID = process.env.SLACK_CHANNEL_ID as string;
+const CHANNEL_ID = process.env.CHANNEL_ID as string;
 // const BASE_URL = 'https://media.uheadless.com/aciiffac23';
 const TARGET_URL = 'https://www.madklubben.dk/en/lunch/madklubben';
 
