@@ -23,7 +23,7 @@ jobs:
       - name: Set environment variables
         run: |
           echo "CHANNEL_ID=${{ secrets.CHANNEL_ID }}" >> .env
-          echo "SLACK_BOT_TOKEN=${{ secrets.SLACK_TOKEN }}" >> .env
+          echo "SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}" >> .env
 
       - name: Run npm start
         run: npm start
