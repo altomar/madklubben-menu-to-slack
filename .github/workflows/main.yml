@@ -2,7 +2,7 @@ name: Daily Menu post
 
 on:
   schedule:
-    - cron: '5 10 * * 1-5' # Monday to Friday, 9:52 UTC -> 10:52 Copenhagen time
+    - cron: '15 9 * * 1-5' # Monday to Friday, 9:15 UTC -> 10:15 Copenhagen time
 
 jobs:
   run-npm-start:
