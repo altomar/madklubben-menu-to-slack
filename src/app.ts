@@ -71,6 +71,9 @@ async function formatText(text: string): Promise<string> {
         return line;
     }).join('\n');
 
+    //if the line is only 1 or 2 characters long, remove it
+    selectedText = selectedText.split('\n').filter((line) => line.length > 2).join('\n');
+
     //? do it later, not important
     //  /* now we add emojis to the start of a line if that line contains:
     // pork, pig = :pig:
