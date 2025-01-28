@@ -64,13 +64,8 @@ async function formatText(text: string): Promise<string> {
     let selectedText = text.substring(start + 1, end);
     selectedText = selectedText.replace(/•/g, ' ');
 
-    // if the line contains "allergen", make the line italic
-    selectedText = selectedText.split('\n').map((line) => {
-        if (line.toLowerCase().includes('allergen')) {
-            return `_${line}_`;
-        }
-        return line;
-    }).join('\n');
+    // remove lines containing "allergen"
+    selectedText = selectedText.split('\n').filter((line) => !line.toLowerCase().includes('allergen')).join('\n');
 
     // if the line is only 1 or 2 characters long, replace it with an empty line
     selectedText = selectedText.split('\n').map((line) => line.length > 2 ? line : '').join('\n');
