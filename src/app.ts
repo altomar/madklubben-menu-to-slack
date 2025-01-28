@@ -55,6 +55,7 @@ async function extractTextFromPdf(filePath: string): Promise<string> {
 }
 
 async function formatText(text: string): Promise<string> {
+    // remove bullet points and extra spaces
     const start = text.indexOf('•');
     const end = text.lastIndexOf('•');
     if (start === -1 || end === -1 || start === end) {
@@ -71,27 +72,16 @@ async function formatText(text: string): Promise<string> {
         return line;
     }).join('\n');
 
-    //if the line is only 1 or 2 characters long, remove it
-    selectedText = selectedText.split('\n').filter((line) => line.length > 2).join('\n');
+    // if the line is only 1 or 2 characters long, replace it with an empty line
+    selectedText = selectedText.split('\n').map((line) => line.length > 2 ? line : '').join('\n');
 
-    //? do it later, not important
-    //  /* now we add emojis to the start of a line if that line contains:
-    // pork, pig = :pig:
-    // chicken = :chicken:
-    // fish = :fish:
-    // beed, burger = :cow: */
-    // selectedText = selectedText.split('\n').map((line) => {
-    //     if (line.toLowerCase().includes('pork') || line.toLowerCase().includes('pig')) {
-    //         return `:pig: ${line}`;
-    //     } else if (line.toLowerCase().includes('chicken')) {
-    //         return `:chicken: ${line}`;
-    //     } else if (line.toLowerCase().includes('fish')) {
-    //         return `:fish: ${line}`;
-    //     } else if (line.toLowerCase().includes('beef') || line.toLowerCase().includes('burger')) {
-    //         return `:cow: ${line}`;
-    //     }
-    //     return line;
-    // }).join('\n');
+    // make the first line of the entire text bold
+    const lines = selectedText.split('\n');
+    if (lines.length > 0) {
+        lines[0] = `*${lines[0].trim()}*`;
+    }
+    selectedText = lines.join('\n');
+
     console.log('PDF text:', selectedText.trim());
     return selectedText.trim();
 }
