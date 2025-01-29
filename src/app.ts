@@ -70,10 +70,13 @@ async function formatText(text: string): Promise<string> {
     // if the line is only 1 or 2 characters long, replace it with an empty line
     selectedText = selectedText.split('\n').map((line) => line.length > 2 ? line : '').join('\n');
 
-    // make the first line of the entire text bold
+    // make the first line that contains characters bold
     const lines = selectedText.split('\n');
-    if (lines.length > 0) {
-        lines[0] = `*${lines[0].trim()}*`;
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].trim().length > 0) {
+            lines[i] = `*${lines[i].trim()}*`;
+            break;
+        }
     }
     selectedText = lines.join('\n');
 
